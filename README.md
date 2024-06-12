@@ -9,15 +9,15 @@
 
 ## About Application
 
-It's a basic Laravel application
-For running the test, you can use the command php artisan test
-For running individual check, you can run the commands:
-php artisan calculator "1 + 1"
-php artisan calculator "3 - 1"
-php artisan calculator "3 * 2"
-php artisan calculator "4 / 2"
-php artisan calculator "1 + -1"
-php artisan calculator "3 - -1"
-php artisan calculator "3 * -2"
-php artisan calculator "4 / -2"
-php artisan calculator "4 / 0"
+It's a basic Laravel application <br />
+For running the test, you can use the command php artisan test <br />
+For running individual check, you can run the commands: <br />
+php artisan calculator "1 + 1" <br />
+php artisan calculator "3 - 1" <br />
+php artisan calculator "3 * 2" <br />
+php artisan calculator "4 / 2" <br />
+php artisan calculator "1 + -1" <br />
+php artisan calculator "3 - -1" <br />
+php artisan calculator "3 * -2" <br />
+php artisan calculator "4 / -2" <br />
+php artisan calculator "4 / 0" <br />
