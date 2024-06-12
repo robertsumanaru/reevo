@@ -56,11 +56,11 @@ class CalculatorCommandTest extends TestCase
         $this->assertEquals(5, $result);
     }
 
-    public function testInvalidExpression()
+    public function testOnlyANumber()
     {
         $command = new CalculatorCommand();
         $result = $command->calculate(['10']);
-        $this->assertFalse($result);
+        $this->assertEquals(10,$result);
     }
 
     public function testInvalidSqrtUsage()
@@ -74,6 +74,27 @@ class CalculatorCommandTest extends TestCase
     {
         $command = new CalculatorCommand();
         $result = $command->calculate(['5', '+', '3', '-', '2']);
-        $this->assertFalse($result);
+        $this->assertEquals(6,$result);
+    }
+
+    public function testWithLetters()
+    {
+        $command = new CalculatorCommand();
+        $result = $command->calculate(['10', '+', 'a']);
+        $this->assertEquals("Invalid expression. Only numbers, '+', '-', '*', '/', and 'sqrt' are allowed.",$result);
+    }
+
+    public function testSquareRootLetter()
+    {
+        $command = new CalculatorCommand();
+        $result = $command->calculate(['sqrt', 'a']);
+        $this->assertEquals("sqrt argument is not correct", $result);
+    }
+
+    public function testSquareRootMissing()
+    {
+        $command = new CalculatorCommand();
+        $result = $command->calculate(['sqrt', '']);
+        $this->assertEquals("sqrt argument is not correct", $result);
     }
 }

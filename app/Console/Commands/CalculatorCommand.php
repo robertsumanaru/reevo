@@ -38,44 +38,72 @@ class CalculatorCommand extends Command
     public function calculate($expression)
     {
         $numbers = [];
-        $operator = '';
+        $operators = [];
 
-        foreach ($expression as $key => $expressionItem) {
+        foreach ($expression as  $key => $expressionItem) {
             if (is_numeric($expressionItem)) {
                 $numbers[] = $expressionItem;
-            } elseif (in_array($expressionItem, ['+', '-', '*', '/'])) {
-                if ($operator !== '') {
-                    return false; // More than one operator encountered
+            } elseif (in_array($expressionItem, ['+', '-'])) {
+                while (!empty($operators) && ($operators[count($operators) - 1] === '*' || $operators[count($operators) - 1] === '/')) {
+                    $this->evaluateExpression($numbers, $operators);
                 }
-                $operator = $expressionItem;
+                $operators[] = $expressionItem;
+            } elseif (in_array($expressionItem, ['*', '/'])) {
+                $operators[] = $expressionItem;
             } elseif ($expressionItem === 'sqrt') {
-                if(isset($expression[$key + 1]) && is_numeric($expression[$key + 1])) {
+                // Handle square root separately
+                if (isset($expression[$key + 1]) && is_numeric($expression[$key + 1])) {
                     return sqrt($expression[$key + 1]);
                 } else {
-                    return "sqrt argument is not correct";
+                    if(isset($expression[$key + 1]) && !is_numeric($expression[$key + 1])) {
+                        return "sqrt argument is not correct";
+                    }
+                    return "sqrt argument is missing";
                 }
+            } else {
+                return "Invalid expression. Only numbers, '+', '-', '*', '/', and 'sqrt' are allowed.";
             }
         }
 
-        if (count($numbers) !== 2 || $operator === '') {
+        // Evaluate remaining expression
+        while (!empty($operators)) {
+            $this->evaluateExpression($numbers, $operators);
+        }
+
+        if (count($numbers) !== 1) {
             return false; // Invalid expression
         }
 
+        return $numbers[0];
+    }
+
+    private function evaluateExpression(&$numbers, &$operators)
+    {
+        $operator = array_pop($operators);
+        $operand2 = array_pop($numbers);
+        $operand1 = array_pop($numbers);
+
         switch ($operator) {
             case '+':
-                return $numbers[0] + $numbers[1];
+                $result = $operand1 + $operand2;
+                break;
             case '-':
-                return $numbers[0] - $numbers[1];
+                $result = $operand1 - $operand2;
+                break;
             case '*':
-                return $numbers[0] * $numbers[1];
+                $result = $operand1 * $operand2;
+                break;
             case '/':
-                if ($numbers[1] == 0) {
+                if ($operand2 == 0) {
                     return false; // Division by zero
                 }
-                return $numbers[0] / $numbers[1];
+                $result = $operand1 / $operand2;
+                break;
             default:
                 return false;
         }
+
+        $numbers[] = $result;
     }
 
 }
